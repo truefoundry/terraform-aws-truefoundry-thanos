@@ -1,23 +1,6 @@
-data "aws_iam_policy_document" "artifact_bucket_policy" {
-  statement {
-    effect = "Allow"
-    actions = [
-      "s3:ListBucket",
-      "s3:PutObject",
-      "s3:GetObject",
-      "s3:DeleteObject",
-    ]
-    resources = [
-      "arn:aws:s3:::${local.artifact_bucket_unique_name}*",
-      "arn:aws:s3:::${local.artifact_bucket_unique_name}*/*",
-    ]
-  }
-}
-
-
 module "artifact_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "3.7.0"
+  version = "3.14.0"
 
   bucket        = var.artifact_bucket_enable_override ? var.artifact_bucket_override_name : null
   bucket_prefix = var.artifact_bucket_enable_override ? null : local.artifact_bucket_unique_name
@@ -42,7 +25,7 @@ module "artifact_bucket" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 
-  acl = "private" # "acl" conflicts with "grant" and "owner"
+  # acl = "private" # "acl" conflicts with "grant" and "owner"
 
   versioning = {
     status     = true
